@@ -3,7 +3,13 @@
       <nav-bar class="nav-bar">
           <div slot='center'>购物街</div>
       </nav-bar>
-
+      <!-- 假的选项卡 -->
+     <tab-control :titles="['流行','新款','精选']"
+       class="tab-control"
+       @tabClick="tabClick"
+       ref="tabcontrol1"
+       v-show="isFixed"
+      ></tab-control>
       <scroll class="content" ref="scroll"
        :probe-type='3'
         @scroll="HomeScroll"
@@ -11,15 +17,18 @@
         @pullingUp='loadMore'
         >
       <!-- 轮播图 -->
-      <home-swiper :banners='banners'></home-swiper>
+      <home-swiper :banners='banners'
+      @swiperImgLoad='swiperLoad'
+      ></home-swiper>
       <!-- 圆点图 -->
       <recommend-view :recommend='recommend'></recommend-view>
       <!-- 大图 -->
       <feature-view></feature-view>
       <!-- 选项卡 -->
       <tab-control :titles="['流行','新款','精选']"
-       class="tab-control"
+       
        @tabClick="tabClick"
+       ref="tabcontrol2"
       ></tab-control>
      <!-- 商品列表 -->
      <goods-list :goods='goodsList[crType].list'></goods-list>
@@ -42,6 +51,7 @@ import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
+import {debounce} from '../../common/utils'
 import {getHomeMultidata,getHomeGoods} from '../../network/home'
 export default {
  components:{
@@ -65,6 +75,9 @@ export default {
           },
           crType:'pop',//假设当前的商品模块
           isShow:false,//是否显示回到顶部图标
+          offsetT:0,//tab-control默认的offsettop值
+          isFixed:false,//是否显示吸顶效果
+          scrollY:0,//商品停留的位置
       }
   },
  created(){
@@ -72,14 +85,37 @@ export default {
      this._getHomeGoods('pop')
      this._getHomeGoods('new')
      this._getHomeGoods('sell')
-     //监听商品列表发出来的图片加载完成loadOK事件 
-     //this.$bus.$on('name')接收事件
-     this.$bus.$on('loadOK',()=>{
-         console.log('加载成功')
-         this.$refs.scroll.refresh()
-     })
+     
+   
 
  },
+ mounted(){
+     //1.监听商品列表发出来的图片加载完成loadOK事件 
+     //this.$bus.$on('name')接收事件
+      const refresh =  debounce(this.$refs.scroll.refresh,500)
+     this.$bus.$on('loadOK',()=>{
+         refresh()
+     })
+     //2.tab-control吸顶效果
+    
+    this.swiperLoad()
+ },
+   //保持首页的商品停留位置
+   //1.给视图层包裹一个keep-alive 不然activated和deactivated不起效
+   //2.
+   activated(){
+       console.log('在这里')
+       //回到当前页面的时候迅速移动到刚刚的位置
+       this.$refs.scroll.scrollTo(0,this.scrollY,0)
+       this.$refs.scroll.refresh()
+   },
+   deactivated(){
+       //离开页面之前保存y轴的数字 
+       console.log('离开之前')
+       
+       this.scrollY = this.$refs.scroll.getScrollY()
+       console.log(this.scrollY)
+   },
  methods:{
      //轮播图请求
      _getHomeMultidata(){
@@ -113,6 +149,10 @@ export default {
              case 2:
              this.crType = 'sell'            
          }
+        //  给组件的当前index重新赋值
+         this.$refs.tabcontrol1.curentIndex = index
+         this.$refs.tabcontrol2.curentIndex = index
+
      },
      backTop(){
         //  通过this.$refs.name.方法名 可以获取到组件内部的方法
@@ -122,11 +162,20 @@ export default {
      HomeScroll(postion){
          //positon是负值
        this.isShow = -(postion.y)>1000
+       //是否显示 吸顶效果
+        this.isFixed = -(postion.y) > this.offsetT
      },
      //上拉加载更多更多时调用商品数据
      loadMore(){
-         console.log('shangla')
        this._getHomeGoods(this.crType)
+     },
+        //得到offsettop
+        //2.1得到tab-control组件的offsetTop值 .$el才可以得到组件本身的属性
+        //  console.log(this.$refs.tabcontrol.$el.offsetTop)
+        //影响计算offsetTop的因素是轮播图 因为它加载比较慢
+     swiperLoad(){
+         this.offsetT = this.$refs.tabcontrol2.$el.offsetTop
+         
      }
  }
 }
@@ -138,11 +187,9 @@ export default {
     height: 100vh;
 }
 .tab-control{
-    /* postion sticky 当滚动到44px后会自动变成fixed的状态 */
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-    background-color: #fff;
+   position: relative;
+   z-index: 9;
+   background-color: #fff;
 }
 .nav-bar{
     /* position: fixed;

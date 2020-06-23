@@ -40,7 +40,7 @@
       imageLoad(){
         //只要获得一张图片  就对isLoad进行取反  后续的就不会进入到if分支语句中
         if(!this.isLoad){
-          this.$emit('swiperImageLoad');
+          this.$emit('swiperImgLoad')
           this.isLoad = true
         }
       }

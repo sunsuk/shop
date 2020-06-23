@@ -15,7 +15,7 @@
 import NavBar from '../../components/common/navbar/NavBar'
 
 // better-scroll的外层必须设置高度 而且最外层只能包裹一个整体的div 
-import BScroll from 'better-scroll'
+// import BScroll from 'better-scroll'
 export default {
 components:{
      NavBar
@@ -30,7 +30,7 @@ components:{
 }
 </script>
 
-<style>
+<style scoped>
 .wrapper{
     height: 200px;
     background: red ;

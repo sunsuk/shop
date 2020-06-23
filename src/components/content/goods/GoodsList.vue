@@ -67,13 +67,13 @@ export default {
 .goods-list-item {
   font-size: 14px;
   position: relative;
-  width: 170px;
+  width: 48%;
   padding-bottom: 4px;
 }
 
 .goods-list-item img {
   display: block;
-  width: 170px;
+  width: 100%;
   height: 256px;
   border-radius: 5px;
   object-fit: cover;

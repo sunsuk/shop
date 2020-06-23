@@ -45,16 +45,22 @@ export default {
 methods:{
     //封装this.scroll的方法 x横坐标位置 y纵坐标位置 time所要时间
     scrollTo(x,y,time=300){
-       this.scroll.scrollTo(x,y,time) 
+        //this.scroll && 是保证在有scroll的时候调用
+     this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x,y,time) 
     },
     //封装上拉加载更多的下次加载
     finish(){
     //要加上finishPullUp才能执行多次
-       this.scroll.finishPullUp()
+      this.scroll && this.scroll.finishPullUp()
     },
     //时时计算页面的高度
     refresh(){
-        this.scroll.refresh()
+         console.log('加载成功')
+
+      this.scroll && this.scroll.refresh()
+    },
+    getScrollY(){
+        return this.scroll ? this.scroll.y : 0
     }
 
 }
