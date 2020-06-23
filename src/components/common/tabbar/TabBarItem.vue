@@ -34,7 +34,7 @@ export default {
  },
  computed:{
      isActive(){
-         console.log(this.$route)
+        //  console.log(this.$route)
         return this.$route.path.indexOf(this.link) !== -1
      },
      isActiveStyle(){

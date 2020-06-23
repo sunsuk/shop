@@ -30,12 +30,15 @@ export default {
  methods:{
      itemClick(index){
      this.curentIndex = index  
+     this.$emit('tabClick',index)
      }
  }
 }
 </script>
 
-<style>
+<style  scoped>
+
+
 .tab-control{
     display: flex;
     text-align: center;
