@@ -35,7 +35,7 @@
       </scroll>
       <!-- 回到顶部组件 -->
       <!-- native修饰符 可监听组件的事件 -->
-      <back-top @click.native="backTop" v-show="isShow"></back-top>
+      <back-top @click.native="backTop" v-show="currentY>=1000"></back-top>
      
   </div>
 </template>
@@ -51,8 +51,9 @@ import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
-import {debounce} from '../../common/utils'
-import {getHomeMultidata,getHomeGoods} from '../../network/home'
+import{ImgLoadListernerMinXi,backTopMixin} from 'common/mixin'
+
+import {getHomeMultidata,getHomeGoods} from 'network/home'
 export default {
  components:{
      NavBar,
@@ -64,6 +65,7 @@ export default {
      Scroll,
      BackTop
  },
+ mixins:[ImgLoadListernerMinXi,backTopMixin],
   data(){
       return{
           banners:[],//轮播图数据
@@ -74,10 +76,11 @@ export default {
               sell:{page:0,list:[]}
           },
           crType:'pop',//假设当前的商品模块
-          isShow:false,//是否显示回到顶部图标
           offsetT:0,//tab-control默认的offsettop值
           isFixed:false,//是否显示吸顶效果
           scrollY:0,//商品停留的位置
+          scrollTop:0,//记录保存滚动的位置
+        //   ImgLoadok:null,//首页图片加载完成的事件
       }
   },
  created(){
@@ -91,14 +94,17 @@ export default {
  },
  mounted(){
      //1.监听商品列表发出来的图片加载完成loadOK事件 
-     //this.$bus.$on('name')接收事件
-      const refresh =  debounce(this.$refs.scroll.refresh,500)
-     this.$bus.$on('loadOK',()=>{
-         refresh()
-     })
+    //  //this.$bus.$on('name')接收事件
+    //   const refresh =  debounce(this.$refs.scroll.refresh,500)
+    //   this.homeImgListenr = ()=>{
+    //      refresh()
+    //  }
+    //  this.$bus.$on('loadOK',this.homeImgListenr)
      //2.tab-control吸顶效果
     
     this.swiperLoad()
+    //监听首页的位置
+    document.addEventListener('scroll',this.handelscroll)
  },
    //保持首页的商品停留位置
    //1.给视图层包裹一个keep-alive 不然activated和deactivated不起效
@@ -106,17 +112,29 @@ export default {
    activated(){
        console.log('在这里')
        //回到当前页面的时候迅速移动到刚刚的位置
-       this.$refs.scroll.scrollTo(0,this.scrollY,0)
+    //    this.$refs.scroll.scrollTo(0,this.scrollY,0)
+       document.body.scrollTop=sessionStorage.getItem('scrollTop')
        this.$refs.scroll.refresh()
+
+       
    },
    deactivated(){
        //离开页面之前保存y轴的数字 
        console.log('离开之前')
-       
-       this.scrollY = this.$refs.scroll.getScrollY()
-       console.log(this.scrollY)
+
+    //  this.scrollY = this.$refs.scroll.getScrollY()
+     sessionStorage.setItem('scrollTop',this.scrollTop)
+     //离开首页取消对图片的监听
+     this.$bus.$off('loadOK',this.homeImgListenr)
+
+      
    },
  methods:{
+     handelscroll(){
+         console.log('diaoyongle ')
+         this.scrollTop = document.body.scrollTop
+
+     },
      //轮播图请求
      _getHomeMultidata(){
        getHomeMultidata().then(res=>{
@@ -161,7 +179,7 @@ export default {
      //监听首页的滚动距离控制回到顶部的隐藏和显示
      HomeScroll(postion){
          //positon是负值
-       this.isShow = -(postion.y)>1000
+       this.currentY = -(postion.y)
        //是否显示 吸顶效果
         this.isFixed = -(postion.y) > this.offsetT
      },
@@ -197,6 +215,9 @@ export default {
     left: 0;
     right: 0; */
     z-index: 9;
+     background-color: var(--color-tint);
+     color: #fff;
+
 }
 .content{
     /* better 包裹的元素必须设置高度 */

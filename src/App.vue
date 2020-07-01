@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
+    <keep-alive exclude="Detail">
       <!-- keep-alive保持不被销毁的状态 -->
     <router-view></router-view>
 

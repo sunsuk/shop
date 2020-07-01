@@ -1,15 +1,17 @@
 <template>
   <div class="goods-list-box">
+    <p class="recommend" v-show="isRecommend">推荐商品</p>
     
     <div class="goods-list">
       <!-- 循环部分 -->
+
       <div
         :key="index"
-       
+        @click="goodsClick(item)"
         class="goods-list-item"
         v-for="(item, index) in goods"
       >
-        <img alt="" :src="item.show.img" @load="loadOK" />
+        <img alt="" :src="item.image || item.show.img " @load="loadOK" />
         <div class="goods-info">
           <p>{{ item.title }}</p>
           <span class="price">¥{{ item.price }}</span>
@@ -30,7 +32,20 @@ export default {
         return [];
       }
     },
+    isRecommend:{
+      type:Boolean,
+      default(){
+        return false
+      }
+    }
    
+  },
+  computed:{
+    //不同的组件调用层级的不一样
+    // showImg(){
+    //  return this.goods.image || this.goods.show.img 
+    // }
+
   },
   methods: {
   
@@ -38,15 +53,31 @@ export default {
    loadOK(){
      //this.$bus.$emit('name') 发射事件
      this.$bus.$emit('loadOK')
-   }
-   
-  }
+   },
+   goodsClick(item){
+    console.log(item.iid)
+    this.$router.push({
+      path:'/detail',
+      //其他页面得到query是用this.route.query.iid
+      query:{
+        iid:item.iid
+      }
+    })
+  }  ,
+  
+  },
+ 
+  
 };
 </script>
 
 <style scoped>
 .goods-list-box {
   width: 100%;
+}
+.recommend{
+  padding: 10px 10px;
+  font-size: 16px;
 }
 
 .goods-list-box .recommend {
@@ -104,7 +135,7 @@ export default {
 
 .goods-info .collect::before {
   position: absolute;
-  top: 2px;
+  top: 0px;
   left: -16px;
   width: 14px;
   height: 14px;

@@ -28,6 +28,7 @@
         default: []
       }
     },
+    
     methods: {
       stopTimer() {
         this.$refs.swiper.stopTimer()

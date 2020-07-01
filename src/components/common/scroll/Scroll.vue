@@ -11,7 +11,7 @@ import BScroll from 'better-scroll'
 export default {
  data(){
      return{
-         scroll:null
+         scroll:null,
      }
  },
  props:{
@@ -35,6 +35,7 @@ export default {
      //2.监听scroll的滚动坐标值是负值
      this.scroll.on('scroll',postion=>{
          this.$emit('scroll',postion)
+        
      })
      //3.监听上拉加载更多
      this.scroll.on('pullingUp',()=>{
@@ -48,9 +49,11 @@ methods:{
         //this.scroll && 是保证在有scroll的时候调用
      this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x,y,time) 
     },
+    
     //封装上拉加载更多的下次加载
     finish(){
     //要加上finishPullUp才能执行多次
+    console.log('----')
       this.scroll && this.scroll.finishPullUp()
     },
     //时时计算页面的高度
@@ -60,7 +63,11 @@ methods:{
       this.scroll && this.scroll.refresh()
     },
     getScrollY(){
-        return this.scroll ? this.scroll.y : 0
+        return this.scroll.y 
+    },
+     // 滚动到指定元素
+    scrollToElement(el, time) {
+      this.scroll.scrollToElement(el, time);
     }
 
 }
