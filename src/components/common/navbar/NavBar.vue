@@ -19,7 +19,7 @@ export default {
     /* background-color: var(--color-tint);
     color: var(--color-background); */
     box-shadow: 0 1px 1px rgba(100, 100, 100, 0.1);
-
+    font-weight: 600;
     display: flex;
     text-align: center;
 }

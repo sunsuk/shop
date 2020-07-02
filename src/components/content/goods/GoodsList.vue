@@ -11,7 +11,7 @@
         class="goods-list-item"
         v-for="(item, index) in goods"
       >
-        <img alt="" :src="item.image || item.show.img " @load="loadOK" />
+        <img alt="" :src=" item.img || item.image || item.show.img " @load="loadOK" />
         <div class="goods-info">
           <p>{{ item.title }}</p>
           <span class="price">¥{{ item.price }}</span>

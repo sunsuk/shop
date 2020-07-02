@@ -13,7 +13,7 @@
      <detail-comment-info :comment-info='commentInfo' ref="comment" class="detail-set-y"></detail-comment-info>
      <goods-list :goods='recommend' ref="recomend" class="detail-set-y" :is-recommend='true'></goods-list>
      </Scroll>
-     <detail-bottom-bar></detail-bottom-bar>
+     <detail-bottom-bar @addCart='addToCart'></detail-bottom-bar>
       <back-top @click.native="backTop" v-show="currentY>=1500"></back-top>
      
   </div>
@@ -158,6 +158,18 @@ export default {
            }
          }
     }
+  },
+  addToCart(){
+    const goodsObj = {
+        image: this.topImages[0],
+        title: this.goods.title,
+        desc: this.goods.desc,
+        price: this.goods.lowNowPrice,
+        id: this.iid     
+    }
+    //发送给vuex 需要通过 mutations 这样可以监听state的改变
+    this.$store.commit('addCart',goodsObj)
+
   }
   },
   mounted(){
