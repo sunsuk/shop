@@ -5,17 +5,31 @@
               <div><i class="serve icon"></i></div>
               <div style="margin-left:4px">客服</div>
           </div>
-          <div class="bar-item">
-              <div><i class="shop icon"></i></div>
-              <div>店铺</div>
+          <div class="bar-item" 
+           @click="$router.push('/cart')"
+
+          >
+              <div class="cart">
+                  <img src="~assets/img/detail/detail-car.png" alt="">
+              </div>
+              <div style="margin-left:1px">
+                  购物车
+
+              </div>
           </div>
-          <div class="bar-item">
-              <div><i class="collect icon"></i></div>
-              <div>收藏</div>
+          <div class="bar-item defult">
+              <div @click="collectMe" ><i class="collect icon"
+              :class="{'iscollect':isCollect}"
+              ></i></div>
+              <div>{{collect}}</div>
           </div>
+          
           <div class="buy-and-add">
 <div class="addCart" @click="addToCart">加入购物车</div>
-          <div class="buy">购买</div>
+          <div class="buy"
+          
+          
+           >立即购买</div>
           </div>
           
 
@@ -24,10 +38,34 @@
 </template>
 
 <script>
+import {mapMutations} from 'vuex'
 export default {
+   data(){
+       return{
+           collect:'收藏',
+           isCollect:false
+       }
+   }, 
+   //每次刷新获取一次购物车的数据
+   created(){
+     let list  = JSON.parse(localStorage.getItem('cartList'))
+     if(list){
+         this.$store.commit('setCartList',list)
+     }
+   },
   methods:{
+      ...mapMutations(['setCartList']),
       addToCart(){
           this.$emit('addCart')
+      },
+      collectMe(){
+          if(!this.isCollect){
+              this.collect = '已收藏'
+              this.isCollect = true
+          }else{
+              this.collect ='收藏'
+              this.isCollect = false
+          }
       }
   }
 }
@@ -52,6 +90,13 @@ export default {
     flex: 1;
     font-size: 14px;
 }
+.bar-item .cart img{
+    height: 18px;
+    width: 18px;
+    display: block;
+    margin-left: 10px;
+    margin-top: 6px;
+}
 .bar-item .icon{
     display: block;
 
@@ -62,6 +107,10 @@ export default {
     margin-left: 10px;
     margin-top: 6px;
 
+}
+.bar-item .icon.iscollect{
+    background-position:0 -22px ;
+    margin-left: 16px;
 }
 .bar-item .serve{
     background-position: 0 -43px;

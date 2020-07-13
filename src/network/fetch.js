@@ -1,5 +1,11 @@
 //在这个文件里面封装axios 
 import axios from 'axios'
+
+import { Toast } from "vant";
+
+import Loading from "../store/index";
+
+
 export function fetch(config){
     //1创建axios 实例
       const service = axios.create({
@@ -16,17 +22,30 @@ export function fetch(config){
         // if (store.getters.token) {
         //     config.headers['X-Token'] = getToken(); // 让每个请求携带自定义token 请根据实际情况自行修改
         //   }
+
+        //设置loading动画
+        if (Loading.getters.isLoading) {
+          Toast.loading({
+            forbidClick: true,
+            message: "加载中..."
+          });
+        }
         return config
     },err=>{
+    return Promise.reject(err)
+        
         console.log(err)//请求失败后来这里
     })
     //3 设置响应拦截器 
     service.interceptors.response.use(res=>{
      //响应成功后的操作
     //  console.log(res)
+     Toast.clear()
      return res.data
     },err=>{
-     console.log(err)
+    Toast.clear();
+    return Promise.reject(err)
+    
     })
       //4发送网络请求
       return  service(config)

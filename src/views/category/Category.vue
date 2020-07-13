@@ -76,7 +76,7 @@ created(){
    //获取右侧商品信息
    getSubcategory(key){
     getSubcategory(key).then(res=>{
-        console.log(res)
+        // console.log(res)
      this.subcategoryList = res.data.list
     })
    },

@@ -15,7 +15,7 @@ export const ImgLoadListernerMinXi = {
           this.myrefresh() 
         }
         this.$bus.$on('loadOK',this.ImgLoadok)
-        console.log('我是混入的代码')
+        // console.log('我是混入的代码')
       },
 }
 //回到顶部的代码混入

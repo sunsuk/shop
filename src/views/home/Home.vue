@@ -1,7 +1,7 @@
 <template>
   <div id="home">
       <nav-bar class="nav-bar">
-          <div slot='center'>购物街</div>
+          <div slot='center'>suk商城</div>
       </nav-bar>
       <!-- 假的选项卡 -->
      <tab-control :titles="['流行','新款','精选']"
@@ -110,20 +110,20 @@ export default {
    //1.给视图层包裹一个keep-alive 不然activated和deactivated不起效
    //2.
    activated(){
-       console.log('在这里')
+    //    console.log('在这里')
        //回到当前页面的时候迅速移动到刚刚的位置
     //    this.$refs.scroll.scrollTo(0,this.scrollY,0)
-       document.body.scrollTop=sessionStorage.getItem('scrollTop')
+    //    document.body.scrollTop=localStorage.getItem('scrollTop')
        this.$refs.scroll.refresh()
 
        
    },
    deactivated(){
        //离开页面之前保存y轴的数字 
-       console.log('离开之前')
+    //    console.log('离开之前')
 
     //  this.scrollY = this.$refs.scroll.getScrollY()
-     sessionStorage.setItem('scrollTop',this.scrollTop)
+    //  localStorage.setItem('scrollTop',this.scrollTop)
      //离开首页取消对图片的监听
      this.$bus.$off('loadOK',this.homeImgListenr)
 

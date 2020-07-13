@@ -11,7 +11,7 @@
         class="goods-list-item"
         v-for="(item, index) in goods"
       >
-        <img alt="" :src=" item.img || item.image || item.show.img " @load="loadOK" />
+        <img alt="" v-lazy=" item.img || item.image || item.show.img " @load="loadOK" />
         <div class="goods-info">
           <p>{{ item.title }}</p>
           <span class="price">¥{{ item.price }}</span>
@@ -55,7 +55,7 @@ export default {
      this.$bus.$emit('loadOK')
    },
    goodsClick(item){
-    console.log(item.iid)
+    // console.log(item.iid)
     this.$router.push({
       path:'/detail',
       //其他页面得到query是用this.route.query.iid

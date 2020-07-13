@@ -1,0 +1,5 @@
+export const ADDTOCART = 'addToCart'
+export const ADDCOUNT = 'addCount'
+export const SETLOADING = 'setLoading'
+export const SET_CART_LIST ='setCartList'
+export const CLEAR_CART_LIST = 'clearCartList'

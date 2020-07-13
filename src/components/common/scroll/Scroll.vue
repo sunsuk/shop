@@ -53,12 +53,12 @@ methods:{
     //封装上拉加载更多的下次加载
     finish(){
     //要加上finishPullUp才能执行多次
-    console.log('----')
+    // console.log('----')
       this.scroll && this.scroll.finishPullUp()
     },
     //时时计算页面的高度
     refresh(){
-         console.log('加载成功')
+        //  console.log('加载成功')
 
       this.scroll && this.scroll.refresh()
     },

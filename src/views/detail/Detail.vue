@@ -37,6 +37,8 @@ import {debounce} from '../../common/utils'
 
 import {ImgLoadListernerMinXi,backTopMixin}  from 'common/mixin' //1.引入混入代码
 import{getDetail,Goods,Shop,GoodsParams,getRecommend} from 'network/detail'
+
+import {mapActions} from 'vuex'
 export default {
   name:'Detail',  
   data(){
@@ -112,6 +114,9 @@ export default {
      })
   },
   methods:{
+    //action的映射关系 也可以使用对象 改名
+       ...mapActions(['addCart']),
+
     imgLoad(){
       this.myrefresh()
       this.getClassList()
@@ -165,10 +170,12 @@ export default {
         title: this.goods.title,
         desc: this.goods.desc,
         price: this.goods.lowNowPrice,
-        id: this.iid     
+        id: this.iid,
+        shopTile:this.shop.name     
     }
     //发送给vuex 需要通过 mutations 这样可以监听state的改变
-    this.$store.commit('addCart',goodsObj)
+     this.$store.dispatch('addCart',goodsObj)
+    
 
   }
   },
@@ -200,6 +207,7 @@ export default {
 .content{
   /*滚动区域 = 总高度 - 导航栏的高度 -底部的高度*/
   height: calc(100% - 44px - 49px);
+  overflow: hidden;
 }
 .detail-nav{
   background-color: #fff;
