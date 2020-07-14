@@ -12,7 +12,7 @@
       <div class="bottom-nav">
         <div class="bottom-left">
         <van-checkbox  checked-color="#ff5777"  v-model="checkedAll" @click="allCheck">全选</van-checkbox>
-        <div class="all-count"><span>合计：</span>{{totalMoney}}<span></span>元</div>
+        <div class="all-count"><span>合计：</span>￥{{ Number(totalMoney).toFixed(2) }}<span></span>元</div>
         </div>
        
         <div class="order-form" @click="buyAll"><button>结算({{length}})</button></div>
@@ -40,10 +40,10 @@ export default {
        ...mapGetters(['cartList']),
        //计算总价格
        totalMoney(){
-         return "￥" + this.cartList.
+         return  this.cartList.
          filter(item=>item.checked ===true).reduce((prevale,item)=>{
             
-             return prevale +item.count * item.price
+             return prevale +item.count * item.price 
          },0)
        },
        length(){
